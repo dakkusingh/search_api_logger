@@ -11,6 +11,7 @@ function search_api_logger_search_api_db_query_alter(\Drupal\Core\Database\Query
  * Implements hook_search_api_solr_query_alter().
  */
 function search_api_logger_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query) {
+  // TODO Figure out a better way to construct the query.
   $output = 'Query = '.$solarium_query->getQuery().', Fields: '.$solarium_query->getOption('fields');
   \Drupal::logger('search_api_logger')->notice($output);
 }
