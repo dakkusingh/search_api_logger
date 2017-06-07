@@ -1,0 +1,11 @@
+<?php
+
+
+/**
+ * Implements hook_install().
+ */
+function search_api_logger_install() {
+  // Set the weight to 9999.
+  module_set_weight('search_api_logger', 9999);
+
+}

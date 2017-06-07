@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Implements hook_search_api_query_alter().
+ */
+function search_api_logger_search_api_query_alter(\Drupal\search_api\Query\QueryInterface &$query) {
+  \Drupal::logger('search_api_logger')->notice(print_r($query));
+}
+
