@@ -1,17 +1,27 @@
 <?php
 
 /**
- * Implements hook_search_api_db_query_alter().
+ * @file
+ * Logger module file.
  */
-function search_api_logger_search_api_db_query_alter(\Drupal\Core\Database\Query\SelectInterface &$db_query, \Drupal\search_api\Query\QueryInterface $query) {
-  \Drupal::logger('search_api_logger')->notice($db_query->__toString());
-}
 
 /**
- * Implements hook_search_api_solr_query_alter().
+ * Implements hook_search_api_db_query_alter().
  */
-function search_api_logger_search_api_solr_query_alter(\Solarium\Core\Query\QueryInterface $solarium_query, \Drupal\search_api\Query\QueryInterface $query) {
-  // TODO Figure out a better way to construct the query.
-  $output = 'Query = '.$solarium_query->getQuery().', Fields: '.$solarium_query->getOption('fields');
-  \Drupal::logger('search_api_logger')->notice($output);
+
+/**
+ * Implements hook_search_api_backend_info_alter().
+ *
+ * Defines custom backend enhancements for supported search api backends.
+ */
+function search_api_logger_search_api_backend_info_alter(array &$backend_info) {
+  // Solr backend.
+  if (isset($backend_info['search_api_solr'])) {
+    $backend_info['search_api_solr']['class'] = '\Drupal\search_api_logger\Plugin\search_api\backend\SearchApiLoggerSolrBackend';
+  }
+
+  // DB backend.
+  if (isset($backend_info['search_api_db'])) {
+    $backend_info['search_api_db']['class'] = '\Drupal\search_api_logger\Plugin\search_api\backend\SearchApiLoggerDbBackend';
+  }
 }
