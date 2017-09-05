@@ -24,4 +24,10 @@ function search_api_logger_search_api_backend_info_alter(array &$backend_info) {
   if (isset($backend_info['search_api_db'])) {
     $backend_info['search_api_db']['class'] = '\Drupal\search_api_logger\Plugin\search_api\backend\SearchApiLoggerDbBackend';
   }
+
+  // Elastic Search backend.
+  // See https://www.drupal.org/node/2906735
+  if (isset($backend_info['elasticsearch'])) {
+    $backend_info['elasticsearch']['class'] = '\Drupal\search_api_logger\Plugin\search_api\backend\SearchApiLoggerElasticSearchBackend';
+  }
 }
