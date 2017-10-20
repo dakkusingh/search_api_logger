@@ -22,6 +22,8 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
     $conf += [
       'log_query' => FALSE,
       'log_response' => FALSE,
+      'debug_query' => FALSE,
+      'debug_results' => FALSE,
     ];
     return $conf;
   }

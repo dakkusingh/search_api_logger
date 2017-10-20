@@ -21,6 +21,7 @@ class SearchApiLoggerSolrBackend extends SearchApiSolrBackend {
     $conf += [
       'log_query' => FALSE,
       'log_response' => FALSE,
+      'debug_query' => FALSE,
     ];
     return $conf;
   }

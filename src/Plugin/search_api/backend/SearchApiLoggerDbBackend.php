@@ -22,6 +22,7 @@ class SearchApiLoggerDbBackend extends SearchApiDbBackend {
     $conf = parent::defaultConfiguration();
     $conf += [
       'log_query' => FALSE,
+      'debug_query' => FALSE,
     ];
     return $conf;
   }
