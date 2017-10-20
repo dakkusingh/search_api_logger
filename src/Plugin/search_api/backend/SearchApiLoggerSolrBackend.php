@@ -37,6 +37,15 @@ class SearchApiLoggerSolrBackend extends SearchApiSolrBackend {
       '#description' => $this->t('Log all outgoing Solr search requests.'),
       '#default_value' => $this->configuration['log_query'],
     ];
+    $devel_module_present = \Drupal::moduleHandler()->moduleExists('devel');
+
+    $form['advanced']['debug_query'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Debug Solr queries (requires Devel module)'),
+      '#description' => $this->t('Add the debugQuery Solr parameter to each query and show alongside search results pages.'),
+      '#default_value' => $this->configuration['debug_query'] && $devel_module_present,
+      '#disabled' => !$devel_module_present,
+    ];
     $form['advanced']['log_response'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Log search results'),
@@ -58,6 +67,11 @@ class SearchApiLoggerSolrBackend extends SearchApiSolrBackend {
     if ($this->configuration['log_query']) {
       $this->getLogger()->notice($this->formatQuery($solarium_query));
     }
+
+    if ($this->configuration['debug_query']) {
+      $solarium_query->addParam('debugQuery', true);
+    }
+
   }
 
   /**
@@ -70,6 +84,13 @@ class SearchApiLoggerSolrBackend extends SearchApiSolrBackend {
 
     if ($this->configuration['log_response']) {
       $this->getLogger()->notice($this->formatResponse($results));
+    }
+
+    if ($this->configuration['debug_query']) {
+      $response_data = $results->getAllExtraData();
+      if (\Drupal::moduleHandler()->moduleExists('devel')) {
+        kint($response_data['search_api_solr_response']);
+      }
     }
   }
 
