@@ -10,5 +10,5 @@ Configuration:
 
 
 TODO's and limitations:
-- currently, only drupal watchdog is supported. Generic support for other channels (screen, devel) should be added
+- currently, only drupal watchdog and devel is supported. Generic support for other channels should be added
 - tests
