@@ -38,6 +38,15 @@ class SearchApiLoggerDbBackend extends SearchApiDbBackend {
       '#description' => $this->t('Log all outgoing DB search requests.'),
       '#default_value' => $this->configuration['log_query'],
     ];
+    $devel_module_present = \Drupal::moduleHandler()->moduleExists('devel');
+
+    $form['advanced']['debug_query'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Debug DB search requests (requires Devel module)'),
+      '#description' => $this->t('Show DB search requests alongside search results pages.'),
+      '#default_value' => $this->configuration['debug_query'] && $devel_module_present,
+      '#disabled' => !$devel_module_present,
+    ];
 
     return $form;
   }
@@ -52,6 +61,12 @@ class SearchApiLoggerDbBackend extends SearchApiDbBackend {
 
     if ($this->configuration['log_query']) {
       $this->getLogger()->notice($this->formatQuery($db_query));
+    }
+
+    if ($this->configuration['debug_query']) {
+      if (\Drupal::moduleHandler()->moduleExists('devel')) {
+        kint($this->formatQuery($query));
+      }
     }
   }
 

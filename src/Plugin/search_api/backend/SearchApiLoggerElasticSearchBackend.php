@@ -38,11 +38,27 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
       '#description' => $this->t('Log all outgoing Elastic Search search requests.'),
       '#default_value' => $this->configuration['log_query'],
     ];
+    $devel_module_present = \Drupal::moduleHandler()->moduleExists('devel');
+
+    $form['advanced']['debug_query'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Debug Elastic Search queries (requires Devel module)'),
+      '#description' => $this->t('Show Elastic Search queries alongside search results pages.'),
+      '#default_value' => $this->configuration['debug_query'] && $devel_module_present,
+      '#disabled' => !$devel_module_present,
+    ];
     $form['advanced']['log_response'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Log search results'),
       '#description' => $this->t('Log all search result responses received from Elastic Search.'),
       '#default_value' => $this->configuration['log_response'],
+    ];
+    $form['advanced']['debug_results'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Debug Elastic Search results (requires Devel module)'),
+      '#description' => $this->t('Show Elastic Search results alongside search results pages.'),
+      '#default_value' => $this->configuration['debug_results'] && $devel_module_present,
+      '#disabled' => !$devel_module_present,
     ];
 
     return $form;
@@ -59,6 +75,12 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
     if ($this->configuration['log_query']) {
       $this->getLogger()->notice($this->formatQuery($query));
     }
+
+    if ($this->configuration['debug_query']) {
+      if (\Drupal::moduleHandler()->moduleExists('devel')) {
+        kint($this->formatQuery($query));
+      }
+    }
   }
 
   /**
@@ -71,6 +93,12 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
 
     if ($this->configuration['log_response']) {
       $this->getLogger()->notice($this->formatResponse($results));
+    }
+
+    if ($this->configuration['debug_results']) {
+      if (\Drupal::moduleHandler()->moduleExists('devel')) {
+        kint($this->formatQuery($results));
+      }
     }
   }
 
