@@ -78,7 +78,12 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
 
     if ($this->configuration['debug_query']) {
       if (\Drupal::moduleHandler()->moduleExists('devel')) {
-        kint($this->formatQuery($query));
+        kint([
+          'IndexId' => $query->getIndex()->id(),
+          'Query' => $query->getOriginalKeys(),
+          'Fields' => $query->getFulltextFields(),
+          'Sorts' => $query->getSorts(),
+        ]);
       }
     }
   }
@@ -100,7 +105,7 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
 
     if ($this->configuration['debug_results']) {
       if (\Drupal::moduleHandler()->moduleExists('devel')) {
-        kint($this->formatQuery($results));
+        kint($results->getResultItems());
       }
     }
   }
@@ -115,7 +120,7 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
    *   Formatted text from query.
    */
   protected function formatQuery(QueryInterface $query) {
-    return 'Search API Backend: elasticsearch; Query: ' . $query->getOriginalKeys() . '; Fields: ' . $query->__toString($query->getFulltextFields());
+    return 'Search API Backend: elasticsearch; Query: ' . $query->getOriginalKeys() . '; Fields: ' . $query->__toString(array_keys($query->getFulltextFields()));
   }
 
   /**
