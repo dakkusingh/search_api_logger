@@ -32,7 +32,7 @@ class SearchApiLoggerSolrBackend extends SearchApiSolrBackend {
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
-    $form['advanced']['log_query'] = [
+    $form['log_query'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Log search requests'),
       '#description' => $this->t('Log all outgoing Solr search requests.'),
@@ -40,14 +40,14 @@ class SearchApiLoggerSolrBackend extends SearchApiSolrBackend {
     ];
     $devel_module_present = \Drupal::moduleHandler()->moduleExists('devel');
 
-    $form['advanced']['debug_query'] = [
+    $form['debug_query'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Debug Solr queries (requires Devel module)'),
       '#description' => $this->t('Add the debugQuery Solr parameter to each query and show alongside search results pages.'),
       '#default_value' => $this->configuration['debug_query'] && $devel_module_present,
       '#disabled' => !$devel_module_present,
     ];
-    $form['advanced']['log_response'] = [
+    $form['log_response'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Log search results'),
       '#description' => $this->t('Log all search result responses received from Solr.'),

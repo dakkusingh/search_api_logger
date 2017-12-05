@@ -7,8 +7,6 @@ use Drupal\search_api\Query\ResultSetInterface;
 use Drupal\elasticsearch_connector\Plugin\search_api\backend\SearchApiElasticsearchBackend;
 use Drupal\Core\Form\FormStateInterface;
 
-// See https://www.drupal.org/node/2906735
-
 /**
  * Elastic Search backend for Search API Logger.
  */
@@ -34,7 +32,7 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form = parent::buildConfigurationForm($form, $form_state);
 
-    $form['advanced']['log_query'] = [
+    $form['log_query'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Log search requests'),
       '#description' => $this->t('Log all outgoing Elastic Search search requests.'),
@@ -42,20 +40,20 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
     ];
     $devel_module_present = \Drupal::moduleHandler()->moduleExists('devel');
 
-    $form['advanced']['debug_query'] = [
+    $form['debug_query'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Debug Elastic Search queries (requires Devel module)'),
       '#description' => $this->t('Show Elastic Search queries alongside search results pages.'),
       '#default_value' => $this->configuration['debug_query'] && $devel_module_present,
       '#disabled' => !$devel_module_present,
     ];
-    $form['advanced']['log_response'] = [
+    $form['log_response'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Log search results'),
       '#description' => $this->t('Log all search result responses received from Elastic Search.'),
       '#default_value' => $this->configuration['log_response'],
     ];
-    $form['advanced']['debug_results'] = [
+    $form['debug_results'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Debug Elastic Search results (requires Devel module)'),
       '#description' => $this->t('Show Elastic Search results alongside search results pages.'),
@@ -88,6 +86,9 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
   /**
    * Adds logging of Elastic Search result.
    *
+   * @param \Drupal\search_api\Query\ResultSetInterface $results
+   *   Results set.
+   *
    * {@inheritdoc}
    */
   protected function postQuery(ResultSetInterface $results, QueryInterface $query, $response) {
@@ -114,7 +115,7 @@ class SearchApiLoggerElasticSearchBackend extends SearchApiElasticsearchBackend 
    *   Formatted text from query.
    */
   protected function formatQuery(QueryInterface $query) {
-    return 'Search API Backend: elasticsearch; Query: ' . $query->getOption('query') . '; Fields: ' . $query->getOption('fields');
+    return 'Search API Backend: elasticsearch; Query: ' . $query->getOriginalKeys() . '; Fields: ' . $query->__toString($query->getFulltextFields());
   }
 
   /**

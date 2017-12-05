@@ -41,7 +41,7 @@ class SearchApiLoggerDbBackend extends SearchApiDbBackend {
     ];
     $devel_module_present = \Drupal::moduleHandler()->moduleExists('devel');
 
-    $form['advanced']['debug_query'] = [
+    $form['debug_query'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Debug DB search requests (requires Devel module)'),
       '#description' => $this->t('Show DB search requests alongside search results pages.'),
